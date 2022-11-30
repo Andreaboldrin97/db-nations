@@ -1,0 +1,7 @@
+Todo
+Creare nuovo DB chiamato nations e importare il nuovo dump
+Creare in getore db la query per ottenere la lista di tutte le nazioni mostrando nome, id, nome della regione e nome del continente, ordinata per nome della nazione
+Creare un progetto Maven nuovo ed eseguire la query come visto a lezione
+Modificare il programma precedente in modo che richieda all'utente una stringa da ricercare tra i nomi delle nazioni utilizzando i PreparedStatement con i parametri come visto in classe
+BONUS
+Dopo aver effettuato la ricerca, richiede all'utente un id su cui effettuare ulteriori analisi restituendo tutte le lingue parlate + le statistiche piu' recenti della nazione
