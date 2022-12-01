@@ -39,7 +39,8 @@ public class Main {
 								+ "		ON regions.continent_id = continents.continent_id\n"
 								+ "	JOIN countries\n"
 								+ "		ON countries.country_id = regions.region_id\n"
-								+ "WHERE countries.name LIKE ?";
+								+ "WHERE countries.name LIKE ?"
+								+"ORDER BY countries.name";
 					
 			try (PreparedStatement ps = connection.prepareStatement (sql)) {
 				ps.setString(1, "%"+inputName+"%");
