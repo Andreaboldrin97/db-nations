@@ -67,45 +67,57 @@ public class Main {
 		try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD)) {
 			
 			
-			final String sql = "SELECT countries.country_id,continents.name AS continent, regions.name AS region, countries.name AS country, languages.language, country_stats.year, country_stats.population, country_stats.gdp\n"
-								+ "FROM continents\n"
-								+ "	JOIN regions\n"
-								+ "		ON regions.continent_id = continents.continent_id\n"
-								+ "	JOIN countries\n"
-								+ "		ON countries.country_id = regions.region_id\n"
-								+ "	JOIN country_languages\n"
-								+ "		ON country_languages.country_id = countries.country_id\n"
-								+ "	JOIN languages\n"
-								+ "		ON languages.language_id = country_languages.language_id\n"
-								+ "	JOIN country_stats\n"
-								+ "		ON country_stats.country_id = countries.country_id\n"
-								+ "WHERE countries.country_id = ? \n"
-								+ "ORDER BY country_stats.year DESC\n"
-								+ "LIMIT 1";
+			final String sqlLang = " SELECT DISTINCT language "
+									 + " FROM countries "
+									 + "	JOIN country_languages "
+									 + "		ON countries.country_id = country_languages.country_id "
+									 + "	JOIN languages "
+									 + "		ON country_languages.language_id = languages.language_id "
+									 + " WHERE countries.country_id = ? ";
 								
-			try (PreparedStatement ps = connection.prepareStatement (sql)) {
+			try (PreparedStatement ps = connection.prepareStatement (sqlLang)) {
 				ps.setInt(1, inputId );
 				
-				try (ResultSet res = ps.executeQuery ( )){
-					while (res.next()) {
+				try (ResultSet rs = ps.executeQuery()) {
+					
+					System.out.print("Languages: ");
+					while(rs.next()) {
 						
-						int idContinent = res.getInt(1);
-						String continenetName = res.getString(2);
-						String regionsName = res.getString(3);
-						String countriesName = res.getString(4);
-						String languages = res.getString(5);
-						int country_stats = res.getInt(6);
-						int population = res.getInt(7);
-						double gdp = res.getDouble(8);
+						final String lang = rs.getString(1);
 						
-						System. out .println ( idContinent + "-" + continenetName + "-" 
-												+ regionsName + "-" + countriesName + "-"
-												+ languages + "-" + country_stats + "-"
-												+ population + "-" + gdp);
+						System.out.print(lang + (!rs.isLast() ? ", " : ""));
 					}
 				}
 			}
+			
+			System.out.println("");
+			
+			final String sqlStat = " SELECT country_stats.* "
+								 + " FROM countries "
+								 + "	JOIN country_stats "
+								 + "		ON countries.country_id = country_stats.country_id "
+								 + " WHERE countries.country_id = ? "
+								 + " ORDER BY year DESC "
+								 + " LIMIT 1 ";
+				try (PreparedStatement ps = connection.prepareStatement(sqlStat)) {
 				
+				ps.setInt(1, inputId);
+				
+				try (ResultSet rs = ps.executeQuery()) {
+				
+					System.out.println("Most recent stats: ");
+					if(rs.next()) {
+						
+						final String year = rs.getString(2);
+						final String pop = rs.getString(3);
+						final String gdp = rs.getString(4);
+						
+						System.out.println("Year: " + year);
+						System.out.println("Population: " + pop);
+						System.out.println("GDP: " + gdp);
+					}
+				}	
+			}
 		} catch (Exception e) {
 			System.err.println("ERROR: '" + e .getMessage ()) ;
 		}
