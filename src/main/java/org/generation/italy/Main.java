@@ -40,7 +40,7 @@ public class Main {
 								+ "	JOIN countries\n"
 								+ "		ON countries.country_id = regions.region_id\n"
 								+ "WHERE countries.name LIKE ?"
-								+"ORDER BY countries.name";
+								+ "ORDER BY countries.name";
 					
 			try (PreparedStatement ps = connection.prepareStatement (sql)) {
 				ps.setString(1, "%"+inputName+"%");
@@ -79,7 +79,9 @@ public class Main {
 								+ "		ON languages.language_id = country_languages.language_id\n"
 								+ "	JOIN country_stats\n"
 								+ "		ON country_stats.country_id = countries.country_id\n"
-								+ "WHERE countries.country_id = ? AND country_stats.year > 2017";
+								+ "WHERE countries.country_id = ? \n"
+								+ "ORDER BY country_stats.year DESC\n"
+								+ "LIMIT 1";
 								
 			try (PreparedStatement ps = connection.prepareStatement (sql)) {
 				ps.setInt(1, inputId );
