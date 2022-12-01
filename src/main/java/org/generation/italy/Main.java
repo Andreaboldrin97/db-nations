@@ -31,7 +31,7 @@ public class Main {
 								+ "WHERE countries.name LIKE ?";
 					
 			try (PreparedStatement ps = connection.prepareStatement (sql)) {
-				ps.setString(1, inputName);
+				ps.setString(1, "%"+inputName+"%");
 				
 				try (ResultSet res = ps.executeQuery ( )){
 					while (res.next()) {
@@ -41,7 +41,7 @@ public class Main {
 						String regionsName = res.getString(3);
 						String countriesName = res.getString(4);
 						
-						System. out .println ( idContinent + "-" + continenetName + regionsName + "-" + countriesName );
+						System. out .println ( idContinent + "-" + continenetName + "-" + regionsName + "-" + countriesName );
 					}
 				}
 			}
